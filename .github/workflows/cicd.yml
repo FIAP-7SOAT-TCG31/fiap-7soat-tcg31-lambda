@@ -1,0 +1,57 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          npm run build
+
+  build-container:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Cofigure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Configure Docker and ECS
+        uses: docker/login-action@v3
+        with:
+          registry: 287574492696.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            287574492696.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-container]
+    steps:
+      - name: Cofigure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Deploy
+        run: |
+          aws lambda create-function \
+            --function-name hello-world \
+            --package-type Image \
+            --code ImageUri=287574492696.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest \
+            --role arn:aws:iam::287574492696:role/LabRole

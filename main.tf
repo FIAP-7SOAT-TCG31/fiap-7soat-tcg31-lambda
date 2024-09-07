@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   aws_account_id = "287574492696"
-  image_url        = "dkr.ecr.us-east-1.amazonaws.com/fiap_burger_lambda"
+  image_url      = "dkr.ecr.us-east-1.amazonaws.com/fiap_burger_lambda"
 }
 
 resource "aws_lambda_function" "hello_world" {

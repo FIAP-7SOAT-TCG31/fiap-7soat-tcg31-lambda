@@ -8,10 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts"
       - name: Build
         run: |
           npm install
           npm run build
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt
+        run: |
+          terraform fmt --check
+      - name: Terraform Validate
+        run: |
+          terraform validate
 
   build-container:
     runs-on: ubuntu-latest
@@ -41,7 +51,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-container]
     steps:
-      - name: Cofigure AWS
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -49,10 +61,12 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      - name: Deploy
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
         run: |
-          aws lambda create-function \
-            --function-name hello-world \
-            --package-type Image \
-            --code ImageUri=287574492696.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest \
-            --role arn:aws:iam::287574492696:role/LabRole
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          terraform apply --auto-approve

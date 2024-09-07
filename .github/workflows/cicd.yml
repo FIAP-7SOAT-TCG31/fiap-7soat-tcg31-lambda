@@ -58,6 +58,7 @@ jobs:
           push: true
           tags: |
             287574492696.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_lambda:latest
+            287574492696.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_lambda:v${{github.run_number}}
 
   deploy:
     runs-on: ubuntu-latest

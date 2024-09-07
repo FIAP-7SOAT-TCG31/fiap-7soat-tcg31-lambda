@@ -21,6 +21,7 @@ export const handler: Handler = async (
     .then(() => {
       return {
         message: 'Hello, Jack! 😎',
+        v: "2",
         input,
       };
     })
@@ -28,6 +29,7 @@ export const handler: Handler = async (
       return {
         message: 'Too Bad! 😞',
         error: err.message,
+        v: "2",
         input,
       };
     });

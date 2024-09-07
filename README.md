@@ -1,5 +1,8 @@
 ```bash
-aws ecr create-repository --repository-name hello-world --region us-east-1 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+aws ecr create-repository --repository-name fiap_burger --region us-east-1 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+
+aws ecr create-repository --repository-name fiap_burger_lambda --region us-east-1 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+
 
 # 
 
@@ -8,7 +11,7 @@ aws ecr delete-repository --repository-name hello-world
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 287574492696.dkr.ecr.us-east-1.amazonaws.com
 
 
-docker tag gm50x/lambda-test:latest 287574492696.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
+docker tag gm50x/lambda-test:latest 287574492696.dkr.ecr.us-east-1.amazonaws.com/fiap_burger:latest
 
 
 aws lambda create-function \

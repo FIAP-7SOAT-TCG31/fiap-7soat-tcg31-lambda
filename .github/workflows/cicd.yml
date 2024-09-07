@@ -3,6 +3,9 @@ name: Deploy Lambda Function
 on:
   push:
 
+env:
+  TF_VAR_image_version: "v${{ github.run_number}}"
+
 jobs:
   build:
     runs-on: ubuntu-latest

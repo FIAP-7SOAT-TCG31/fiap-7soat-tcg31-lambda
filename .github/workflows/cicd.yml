@@ -30,10 +30,10 @@ jobs:
           aws-region: us-east-1
 
       - uses: hashicorp/setup-terraform@v3
-      
+
       - name: Terraform Init
         run: terraform init
-      
+
       - name: Terraform fmt
         run: terraform fmt --check
 
@@ -55,15 +55,15 @@ jobs:
       - name: Configure Docker and ECS
         uses: docker/login-action@v3
         with:
-          registry: "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}"
+          registry: "${{ AWS_ACCOUNT_ID }}.${{ AWS_ECR_URL }}"
 
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
-            "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}:latest"
-            "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}:v${{github.run_number}}"
+            "${{ AWS_ACCOUNT_ID }}.${{ AWS_ECR_URL }}:latest"
+            "${{ AWS_ACCOUNT_ID }}.${{ AWS_ECR_URL }}:v${{github.run_number}}"
 
   deploy:
     runs-on: ubuntu-latest

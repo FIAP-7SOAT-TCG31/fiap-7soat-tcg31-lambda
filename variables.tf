@@ -9,21 +9,3 @@ variable "cognito_client_id" {
   default     = ""
   sensitive   = true
 }
-
-variable "aws_access_key_id" {
-  description = "AWS Access Credentials"
-  default     = ""
-  sensitive   = true
-}
-
-variable "aws_secret_access_key" {
-  description = "AWS Access Credentials"
-  default     = ""
-  sensitive   = true
-}
-
-variable "aws_session_token" {
-  description = "AWS Access Credentials"
-  default     = ""
-  sensitive   = true
-}

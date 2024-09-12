@@ -5,7 +5,7 @@ import { Email } from './email.value';
 export class User {
   constructor(
     readonly name: string,
-    readonly role: string,
+    readonly role?: string,
     readonly cpf?: CPF,
     readonly email?: Email,
   ) {}

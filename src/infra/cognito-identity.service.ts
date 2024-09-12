@@ -62,7 +62,7 @@ export class CognitoIdentityService implements IdentityService {
         }),
         {
           onSuccess: (result) => {
-            resolve(result.getAccessToken().getJwtToken());
+            resolve(result.getIdToken().getJwtToken());
           },
           onFailure: (err) => {
             console.error('Failed authenticating user', err);

@@ -20,6 +20,15 @@ resource "aws_lambda_function" "fiap_burger_auth_lambda" {
   image_uri     = "${local.aws_account_id}.${local.image_url}:${var.image_version}"
   role          = "arn:aws:iam::${local.aws_account_id}:role/LabRole"
   package_type  = "Image"
+  environment {
+    variables = {
+      COGNITO_USER_POOL_ID  = var.cognito_user_pool_id
+      COGNITO_CLIENT_ID     = var.cognito_client_id
+      AWS_ACCESS_KEY_ID     = var.aws_access_key_id
+      AWS_SECRET_ACCESS_KEY = var.aws_secret_access_key
+      AWS_SESSION_TOKEN     = var.aws_session_token
+    }
+  }
 }
 
 ###########

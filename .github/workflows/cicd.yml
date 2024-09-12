@@ -11,9 +11,6 @@ env:
   TF_VAR_: "v${{ github.run_number}}"
   TF_VAR_cognito_user_pool_id: "${{ secrets.COGNITO_USER_POOL_ID }}"
   TF_VAR_cognito_client_id: "${{ secrets.COGNITO_CLIENT_ID }}"
-  TF_VAR_aws_access_key_id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
-  TF_VAR_aws_secret_access_key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-  TF_VAR_aws_session_token: "${{ secrets.AWS_SESSION_TOKEN }}"
 
 jobs:
   build:

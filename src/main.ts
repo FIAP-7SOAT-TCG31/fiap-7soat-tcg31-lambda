@@ -4,37 +4,62 @@ import {
   Handler,
 } from 'aws-lambda';
 import axios from 'axios';
+import { ValidationError } from './domain/errors/validation.error';
+import { CognitoIdentityService } from './infra/cognito-identity.service';
+import { SignIn } from './usecases/sign-in';
+import { SignUp } from './usecases/sign-up';
+
+const handleEvent = async ({ action, data }: any) => {
+  const cognito = new CognitoIdentityService();
+
+  if (action === 'SignUp') {
+    const signUp = new SignUp(cognito);
+    const tokenData = await signUp.execute(data);
+    return tokenData;
+  }
+
+  if (action === 'SignIn') {
+    const signIn = new SignIn(cognito);
+    const tokenData = signIn.execute(data);
+    return tokenData;
+  }
+
+  if (action === 'Ping') {
+    return { message: 'Pong' };
+  }
+
+  throw new Error(`Invalid operation: ${action}`);
+};
 
 export const handler: Handler = async (
   event: APIGatewayProxyEvent,
   context,
 ): Promise<APIGatewayProxyResult> => {
-  const input = JSON.stringify(event, null, 2);
-  console.log('EVENT: \n', input);
-  console.log(`EVENT: ${input}`);
+  await axios.post(
+    'https://01j76s6kw5q38tbvhc4xq6fs7s10-6f55a0fafffb9b7b2abf.requestinspector.com',
+    event,
+  );
+  const data = JSON.parse(event.body);
+  if (!['SignIn', 'SignUp'].includes(data.action)) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: 'Action must be provided' }),
+    };
+  }
+  try {
+    const result = await handleEvent(data);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result),
+    };
+  } catch (err) {
+    const isValidationError = err instanceof ValidationError;
+    const statusCode = isValidationError ? 400 : 500;
+    const message = isValidationError ? err.message : 'Internal Server Error';
 
-  const output: any = await axios
-    .post(
-      'https://01j76s6kw5q38tbvhc4xq6fs7s10-6f55a0fafffb9b7b2abf.requestinspector.com',
-      event,
-    )
-    .then(() => {
-      return {
-        message: 'Hello, Jack! 😎',
-        input,
-      };
-    })
-    .catch((err) => {
-      return {
-        message: 'Too Bad! 😞',
-        error: err.message,
-        input,
-      };
-    });
-
-  return {
-    statusCode: output.error ? 500 : 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(output),
-  };
+    return {
+      statusCode,
+      body: JSON.stringify({ message }),
+    };
+  }
 };

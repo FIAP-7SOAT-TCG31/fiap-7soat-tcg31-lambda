@@ -93,5 +93,5 @@ resource "aws_lambda_permission" "allow_apigateway" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.fiap_burger_auth_lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.fiap_burger_identity.execution_arn}/*/*"
+  source_arn    = "${aws_api_gateway_rest_api.fiap_burger_identity.execution_arn}/*/*/${aws_lambda_function.fiap_burger_auth_lambda.function_name}"
 }

@@ -40,50 +40,50 @@ resource "aws_api_gateway_rest_api" "fiap_burger_identity" {
   }
 }
 
-resource "aws_api_gateway_resource" "auth" {
+resource "aws_api_gateway_resource" "proxy" {
   rest_api_id = aws_api_gateway_rest_api.fiap_burger_identity.id
   parent_id   = aws_api_gateway_rest_api.fiap_burger_identity.root_resource_id
-  path_part   = "auth"
+  path_part   = "{proxy+}"
 }
 
 resource "aws_api_gateway_method" "proxy" {
   rest_api_id   = aws_api_gateway_rest_api.fiap_burger_identity.id
-  resource_id   = aws_api_gateway_resource.auth.id
-  http_method   = "POST"
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = "ANY"
   authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "lambda_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.fiap_burger_identity.id
-  resource_id             = aws_api_gateway_resource.auth.id
-  http_method             = aws_api_gateway_method.proxy.http_method
+  rest_api_id = aws_api_gateway_rest_api.fiap_burger_identity.id
+  resource_id = aws_api_gateway_method.proxy.resource_id
+  http_method = aws_api_gateway_method.proxy.http_method
+
   integration_http_method = "POST"
-  type                    = "AWS"
+  type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.fiap_burger_auth_lambda.invoke_arn
 }
 
-resource "aws_api_gateway_method_response" "proxy" {
-  rest_api_id = aws_api_gateway_rest_api.fiap_burger_identity.id
-  resource_id = aws_api_gateway_resource.auth.id
-  http_method = aws_api_gateway_method.proxy.http_method
-  status_code = "200"
+resource "aws_api_gateway_method" "proxy_root" {
+  rest_api_id   = aws_api_gateway_rest_api.fiap_burger_identity.id
+  resource_id   = aws_api_gateway_rest_api.fiap_burger_identity.root_resource_id
+  http_method   = "ANY"
+  authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration_response" "proxy" {
+resource "aws_api_gateway_integration" "lambda_root" {
   rest_api_id = aws_api_gateway_rest_api.fiap_burger_identity.id
-  resource_id = aws_api_gateway_resource.auth.id
-  http_method = aws_api_gateway_method.proxy.http_method
-  status_code = aws_api_gateway_method_response.proxy.status_code
+  resource_id = aws_api_gateway_method.proxy_root.resource_id
+  http_method = aws_api_gateway_method.proxy_root.method
 
-  depends_on = [
-    aws_api_gateway_method.proxy,
-    aws_api_gateway_integration.lambda_integration
-  ]
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.fiap_burger_auth_lambda.invoke_arn
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
     aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_integration.lambda_root,
   ]
 
   rest_api_id = aws_api_gateway_rest_api.fiap_burger_identity.id

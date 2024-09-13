@@ -12,6 +12,11 @@ import { IdentityService } from '../usecases/abstractions/identity.service';
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION ?? 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.XAWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.XAWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.XAWS_SESSION_TOKEN,
+  },
 });
 
 export class CognitoIdentityService implements IdentityService {

@@ -22,8 +22,8 @@ resource "aws_lambda_function" "fiap_burger_auth_lambda" {
   package_type  = "Image"
   environment {
     variables = {
-      COGNITO_USER_POOL_ID  = var.cognito_user_pool_id
-      COGNITO_CLIENT_ID     = var.cognito_client_id
+      COGNITO_USER_POOL_ID   = var.cognito_user_pool_id
+      COGNITO_CLIENT_ID      = var.cognito_client_id
       XAWS_ACCESS_KEY_ID     = var.aws_access_key_id
       XAWS_SECRET_ACCESS_KEY = var.aws_secret_access_key
       XAWS_SESSION_TOKEN     = var.aws_session_token

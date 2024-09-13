@@ -3,7 +3,6 @@ import {
   APIGatewayProxyResult,
   Handler,
 } from 'aws-lambda';
-import axios from 'axios';
 import { ValidationError } from './domain/errors/validation.error';
 import { CognitoIdentityService } from './infra/cognito-identity.service';
 import { SignIn } from './usecases/sign-in';
@@ -35,12 +34,8 @@ export const handler: Handler = async (
   event: APIGatewayProxyEvent,
   context,
 ): Promise<APIGatewayProxyResult> => {
-  await axios.post(
-    'https://01j76s6kw5q38tbvhc4xq6fs7s10-6f55a0fafffb9b7b2abf.requestinspector.com',
-    event,
-  );
   const data = JSON.parse(event.body);
-  if (!['SignIn', 'SignUp'].includes(data.action)) {
+  if (!['SignIn', 'SignUp', 'Ping'].includes(data.action)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: 'Action must be provided' }),

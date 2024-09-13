@@ -43,6 +43,7 @@ jobs:
 
   build-container:
     runs-on: ubuntu-latest
+    environment: build
     needs: [build]
     steps:
       - name: Cofigure AWS
@@ -68,6 +69,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: production
     needs: [build-container]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:

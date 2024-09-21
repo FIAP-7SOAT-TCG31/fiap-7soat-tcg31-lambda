@@ -30,6 +30,10 @@ const handleEvent = async ({ action, data }: any) => {
   throw new Error(`Invalid operation: ${action}`);
 };
 
+const applicationJsonContentType = {
+  'Content-Type': 'application/json',
+};
+
 export const handler: Handler = async (
   event: APIGatewayProxyEvent,
   context,
@@ -37,6 +41,7 @@ export const handler: Handler = async (
   const data = JSON.parse(event.body);
   if (!['SignIn', 'SignUp', 'Ping'].includes(data.action)) {
     return {
+      headers: applicationJsonContentType,
       statusCode: 400,
       body: JSON.stringify({ message: 'Action must be provided' }),
     };
@@ -45,6 +50,7 @@ export const handler: Handler = async (
     const result = await handleEvent(data);
     return {
       statusCode: 200,
+      headers: applicationJsonContentType,
       body: JSON.stringify(result),
     };
   } catch (err) {
@@ -54,6 +60,7 @@ export const handler: Handler = async (
 
     return {
       statusCode,
+      headers: applicationJsonContentType,
       body: JSON.stringify({ message }),
     };
   }

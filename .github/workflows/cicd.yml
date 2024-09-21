@@ -68,15 +68,15 @@ jobs:
       - name: Configure Docker and ECS
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_auth_lambda
+          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_identity
 
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_auth_lambda:latest
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_auth_lambda:v${{github.run_number}}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_identity:latest
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fiap_burger_identity:v${{github.run_number}}
 
   deploy:
     runs-on: ubuntu-latest

@@ -24,7 +24,10 @@ export class CognitoIdentityService implements IdentityService {
   private readonly clientId = process.env.COGNITO_CLIENT_ID;
 
   async createUser(user: User): Promise<void> {
-    const attributes = [{ Name: 'custom:role', Value: user.role }];
+    const attributes = [
+      { Name: 'name', Value: user.name },
+      { Name: 'custom:role', Value: user.role },
+    ];
 
     if (user.cpf) {
       attributes.push({ Name: 'custom:cpf', Value: user.cpf.value });

@@ -8,7 +8,7 @@ type Input = {
   name: string;
   email?: string;
   cpf?: string;
-  role: 'CUSTOMER' | 'ADMIN';
+  role: 'CUSTOMER' | 'ADMIN' | 'APP';
 };
 
 type Output = {

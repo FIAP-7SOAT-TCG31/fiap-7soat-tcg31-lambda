@@ -19,3 +19,14 @@ resource "aws_lambda_function" "fiap_burger_identity" {
     }
   }
 }
+
+output "fiap_burger_identity_invoke_arn" {
+  description = "Function Invoke ARN"
+  value       = aws_lambda_function.fiap_burger_identity.invoke_arn
+  sensitive   = true
+}
+
+output "fiap_burger_identity_function_name" {
+  description = "Function Name"
+  value       = aws_lambda_function.fiap_burger_identity.function_name
+}

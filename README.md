@@ -1,15 +1,11 @@
-# FiapBurgerIdentity
+# Tech Challenge FIAP Project
 
-Uma API desenvolvida para abstrair o processo de autenticação de usuários no AWS Cognito.
+Este repositório contem o códido fonte da aplicação FiapBurgerIdentity. Para ver a documentação do projeto, acessar a página da org no Github: https://github.com/FIAP-7SOAT-TCG31
 
-## Stack
-- Typescript
-- Docker
-- Terraform
-- AWS Cognito
-- AWS Lambda
-- AWS API Gateway
+## Integrantes do Grupo 7SOAT-31:
 
-
-Maiores detalhes sobre todo o processo ver no repositório da aplicação principal:
-- https://github.com/FIAP-7SOAT-TCG31/fiap-7soat-tcg31-app
+- Julio Augusto Silva (RM355432)
+- Lucas Henrique de Oliveira Silva (RM354904)
+- Getúlio Magela Silva (RM355427)
+- Lucas Rego Lima (RM356101)
+- Lilian Rosario de Jesus (RM355928)
